@@ -51,6 +51,7 @@ object Problem6 {
 }
 
 object Problem7 {
+  @tailrec
   def flatten(xs: List[Any]): List[Any] = xs flatMap {
     case xs: List[_] => flatten(xs)
     case x => List(x)
@@ -100,6 +101,7 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
 
   private def isLeaf: Boolean = left.equals(EmptyNode) && right.equals(EmptyNode)
 }
+
 case object EmptyNode extends Tree[Nothing] {
   override def toString = ""
 

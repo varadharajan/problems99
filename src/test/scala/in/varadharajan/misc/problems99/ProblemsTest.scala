@@ -2,9 +2,6 @@ package in.varadharajan.misc.problems99
 
 import org.scalatest.{FlatSpec, Matchers}
 
-import in.varadharajan.misc.problems99._
-
-
 class Problem1Test extends FlatSpec with Matchers {
   "last" should "return the last element of the list" in {
     Problem1.last(List(1,2,3,4,5)) shouldBe Some(5)
@@ -82,5 +79,33 @@ class Problem9Test extends FlatSpec with Matchers {
 class Problem10Test extends FlatSpec with Matchers {
   "rotate" should "cycle elements in the list" in {
     Problem10.rotate(3, List('a','b','c','d','e')) shouldBe List('d', 'e', 'a', 'b', 'c')
+  }
+}
+
+class Problem11Test extends FlatSpec with Matchers {
+  "leafCount" should "return the number of leaf nodes in the list" in {
+    Node('x', Node('x'), EmptyNode).leafCount shouldBe 1
+    Node('x', Node('x'), Node('y')).leafCount shouldBe 2
+  }
+}
+
+class Problem12Test extends FlatSpec with Matchers {
+  "leafList" should "return the list of leaf nodes" in {
+    Node('a', Node('b'), Node('c', Node('d'), Node('e'))).leafList shouldBe List('b', 'd', 'e')
+  }
+}
+
+class Problem13Test extends FlatSpec with Matchers {
+  "toString" should "generate string representation of the tree" in {
+    Node('a',
+      Node('b', Node('d'), Node('e')),
+      Node('c', EmptyNode, Node('f',
+        Node('g'),
+        EmptyNode))).toString shouldBe "a(b(d,e),c(,f(g,)))"
+  }
+
+  "fromString" should "generate tree from string representation" in {
+    Node.fromString("a(b,c)") shouldBe Node('a', Node('b'), Node('c'))
+    Node.fromString("a(b(d,e),c)") shouldBe Node('a', Node('b', Node('d'), Node('e')), Node('c'))
   }
 }

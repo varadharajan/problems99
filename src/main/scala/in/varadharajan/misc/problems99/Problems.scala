@@ -84,3 +84,56 @@ object Problem9 {
 object Problem10 {
   def rotate[A](n: Int, xs: List[A]): List[A] = (xs drop n) ++ (xs take n)
 }
+
+// Binary Tree problems
+
+sealed abstract class Tree[+T] {
+  def leafCount: Int
+  def leafList: List[T]
+}
+case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
+  override def toString = if(!isLeaf) s"${value}(${left.toString},${right.toString})" else s"${value}"
+
+  override def leafCount: Int = if (isLeaf) 1 else left.leafCount + right.leafCount
+
+  override def leafList = if (isLeaf) List(value) else left.leafList ++ right.leafList
+
+  private def isLeaf: Boolean = left.equals(EmptyNode) && right.equals(EmptyNode)
+}
+case object EmptyNode extends Tree[Nothing] {
+  override def toString = ""
+
+  override def leafCount = 0
+
+  override def leafList = List()
+}
+
+object Node {
+  def apply[T](value: T): Node[T] = Node(value, EmptyNode, EmptyNode)
+  def fromString(str: String): Tree[Char] = {
+    def nestingLevel(chr: Char, level: Int): Int = chr match {
+      case '(' => level + 1
+      case ')' => level - 1
+      case _ => level
+    }
+
+    def zeroLevelStringRegex(start: Int, chr: Char, level: Int = 0): Int = start match {
+      case x if x < str.length && str(x).equals(chr) && level == 0 => start
+      case x if x < str.length => zeroLevelStringRegex(start + 1, chr, nestingLevel(str(x), level))
+      case _ => -1
+    }
+
+    def parseString() = {
+      val leftTree = zeroLevelStringRegex(2, ',')
+      val rightTree = zeroLevelStringRegex(leftTree, ')')
+      Node(str(0), fromString(str.slice(2, leftTree)), fromString(str.slice(leftTree + 1, rightTree)))
+    }
+
+    str.length match {
+      case 0 => EmptyNode
+      case 1 => Node(str(0))
+      case _ => parseString()
+    }
+  }
+}
+
